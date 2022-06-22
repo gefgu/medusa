@@ -123,7 +123,6 @@ class AuthService extends TransactionBaseService<AuthService> {
           }
         }
       } catch (error) {
-        console.log("error ->", error)
         // ignore
       }
 
