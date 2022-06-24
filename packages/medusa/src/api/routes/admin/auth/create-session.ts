@@ -1,5 +1,7 @@
-import { StrategyResolverService } from "../../../../services"
 import { Request, Response } from "express"
+import AbstractAuthStrategy from "../../../../interfaces/authentication-strategy"
+import { MedusaError } from "medusa-core-utils"
+import { AuthService, StrategyResolverService } from "../../../../services"
 
 /**
  * @oas [post] /auth
@@ -41,14 +43,11 @@ import { Request, Response } from "express"
  *    description: The user doesn't exist or the credentials are incorrect.
  */
 export default async (req: Request, res: Response) => {
-  const strategyResolver = req.scope.resolve(
-    "strategyResolverService"
-  ) as StrategyResolverService
-
-  const authStrategyType = (req.headers["X-medusa-auth-strategy"] ??
-    "core-admin-default-auth") as string
-
-  const authStrategy = strategyResolver.resolveAuthByType(authStrategyType)
+  const authService = req.scope.resolve("authService") as AuthService
+  const authStrategy = await authService.retrieveAuthenticationStrategyToUse(
+    req,
+    "admin"
+  )
   await authStrategy.authenticate(req, res)
 }
 
