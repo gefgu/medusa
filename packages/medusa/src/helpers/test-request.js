@@ -98,7 +98,7 @@ const loadSupertest = async () => {
 export async function request(method, url, opts = {}) {
   const { payload, query, headers = {}, flags = [] } = opts
 
-	if (!supertestRequest) {
+  if (!supertestRequest) {
     supertestRequest = await loadSupertest()
   }
 
